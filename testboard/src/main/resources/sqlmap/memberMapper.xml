@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member">
+    <select id="selectMemberCountByLoginId" resultType="int">
+        select
+          count(*)
+        from
+          member
+        where 1=1
+          and login_id=binary(#{loginId})
+          and leaved=false
+    </select>
+
+    <select id="selectLoginInfoById" resultType="MemberDTO">
+        select
+          id
+          , login_id as loginId
+          , password
+        from
+          member
+        where 1=1
+          and login_id=binary(#{loginId})
+          and leaved=false
+    </select>
+
+    <insert id="insertMemberDetail" parameterType="JoinDTO"
+        useGeneratedKeys="true" keyProperty="memberDetailId">
+        insert into member_detail
+          (
+            name
+            , birthday
+            , mobile_no
+            , email
+            , zipcode
+            , address
+            , address_detail
+          )
+        values
+          (
+            #{name}
+            , #{birthday}
+            , #{mobileNo}
+            , #{email}
+            , #{zipcode}
+            , #{address}
+            , #{addressDetail}
+          )
+    </insert>
+
+    <insert id="insertMember">
+        insert into member
+          (
+            login_id
+            , password
+            , member_detail_id
+          )
+        values
+          (
+            #{loginId}
+            , #{password}
+            , #{memberDetailId}
+          )
+    </insert>
+</mapper>
+
+
+
+
+
+
+
+
