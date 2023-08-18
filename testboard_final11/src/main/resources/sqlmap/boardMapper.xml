@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+    <select id="selectBoardListCount" resultType="int">
+        select
+          count(*)
+        from board a
+        inner join member b on a.register_id = b.id
+        where 1=1
+          and a.deleted=false
+        <include refid="boardSearch"></include>
+        <include refid="boardSort"></include>
+    </select>
+
+    <select id="selectBoardList" resultType="BoardDTO">
+        select
+          a.id
+          , a.title
+          , a.contents
+          , a.hits
+          , a.register_datetime as registerDatetime
+          , b.login_id as registerLoginId
+          , (select count(*) from reply where a.deleted=false and article_id=a.id) as replyCount
+        from board a
+        inner join member b on a.register_id = b.id
+        where 1=1
+          and a.deleted=false
+        <include refid="boardSearch"></include>
+        <include refid="boardSort"></include>
+        limit #{startArticleNumber},#{articleCountPerPage}
+    </select>
+
+    <sql id="boardSearch">
+      <if test="keyword != ''.toString()">
+          <choose>
+              <when test="category == 'title'">
+                  and a.title like concat('%', #{keyword}, '%')
+              </when>
+              <when test="category == 'contents'">
+                  and a.contents like concat('%', #{keyword}, '%')
+              </when>
+              <when test="category == 'register'">
+                  and b.login_id like concat('%', #{keyword}, '%')
+              </when>
+              <otherwise></otherwise>
+          </choose>
+      </if>
+    </sql>
+
+    <sql id="boardSort">
+        <choose>
+            <when test="sort == 'recent'">
+                order by a.id desc
+            </when>
+            <when test="sort == 'last'">
+                order by a.id asc
+            </when>
+            <when test="sort == 'high'">
+                order by a.hits desc
+            </when>
+            <when test="sort == 'low'">
+                order by a.hits asc
+            </when>
+            <otherwise>
+                order by a.id desc
+            </otherwise>
+        </choose>
+    </sql>
+
+    <insert id="insertBoard">
+        insert into board
+          (title
+          , contents
+          , register_id)
+        values
+          (#{title}
+          , #{contents}
+          , (select id from member where login_id=#{loginId} and leaved=false))
+    </insert>
+
+    <select id="selectBoardDetailById" resultMap="boardDetail">
+        select
+          a.id
+          , a.title
+          , a.contents
+          , a.hits
+          , a.register_datetime as registerDatetime
+          , b.login_id as registerLoginId
+        from board a
+        inner join member b on a.register_id = b.id
+        where 1=1
+          and a.deleted=false
+          and a.id=#{id}
+    </select>
+
+    <resultMap id="boardDetail" type="BoardDTO" autoMapping="true">
+        <collection property="replyList" ofType="ReplyDTO" column="id"
+                select="board.selectReplyListByArticleId" autoMapping="true">
+        </collection>
+    </resultMap>
+
+    <select id="selectReplyListByArticleId" resultType="ReplyDTO">
+        select
+          a.id
+          , a.contents
+          , a.register_id as registerId
+          , a.register_datetime as registerDatetime
+          , b.login_id as registerLoginId
+        from reply a
+        inner join member b on a.register_id = b.id
+        where 1=1
+          and a.deleted=false
+          and a.article_id=#{id}
+    </select>
+
+    <update id="updateBoardHits">
+        update board
+        set
+          hits=hits+1
+        where 1=1
+          and deleted=false
+          and id=#{id}
+    </update>
+
+    <update id="updateBoard">
+        update board
+        set
+          title=#{title}
+          , contents=#{contents}
+        where 1=1
+          and deleted=false
+          and id=#{aid}
+          and register_id=(select id from member where login_id=#{loginId} and leaved=false)
+    </update>
+
+    <update id="updateDeleteState">
+        update board
+        set
+          deleted=true
+        where 1=1
+          and id=#{aid}
+          and register_id=(select id from member where login_id=#{loginId} and leaved=false)
+    </update>
+
+    <select id="selectListForRest" resultType="BoardDTO">
+        select
+          a.id
+          , a.title
+          , a.contents
+          , a.hits
+          , date_format(a.register_datetime, '%Y-%m-%d') as strRegisterDatetime
+          , b.login_id as registerLoginId
+          , (select count(*) from reply where a.deleted=false and article_id=a.id) as replyCount
+        from board a
+        left join member b on a.register_id = b.id
+        where 1=1
+          and a.deleted=false
+        order by a.id desc
+        limit 10
+    </select>
+
+    <insert id="insertArticleForRest">
+        insert into board
+          (title
+          , contents
+          , register_id)
+        values
+          (#{title}
+          , #{contents}
+          , (select id from member where login_id=#{loginId} and leaved=false))
+    </insert>
+
+    <insert id="insertReply">
+        insert into reply
+          (contents
+          , article_id
+          , register_id)
+        values
+          (#{contents}
+          , #{aid}
+          , (select id from member where login_id=#{loginId} and leaved=false))
+    </insert>
+</mapper>
+
+
+
+
+
+
+
+
+

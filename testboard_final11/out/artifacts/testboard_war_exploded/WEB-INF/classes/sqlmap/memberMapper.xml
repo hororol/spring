@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member">
+    <select id="selectMemberCountByLoginId" resultType="int">
+        select
+          count(*)
+        from
+          member
+        where 1=1
+          and login_id=binary(#{loginId})
+          and leaved=false
+    </select>
+
+    <select id="selectLoginInfoById" resultType="MemberDTO">
+        select
+          id
+          , login_id as loginId
+          , password
+        from
+          member
+        where 1=1
+          and login_id=binary(#{loginId})
+          and leaved=false
+    </select>
+
+    <insert id="insertMemberDetail" parameterType="JoinDTO"
+        useGeneratedKeys="true" keyProperty="memberDetailId">
+        insert into member_detail
+          (
+            name
+            , birthday
+            , mobile_no
+            , email
+            , zipcode
+            , address
+            , address_detail
+          )
+        values
+          (
+            #{name}
+            , #{birthday}
+            , #{mobileNo}
+            , #{email}
+            , #{zipcode}
+            , #{address}
+            , #{addressDetail}
+          )
+    </insert>
+
+    <insert id="insertMember">
+        insert into member
+          (
+            login_id
+            , password
+            , member_detail_id
+          )
+        values
+          (
+            #{loginId}
+            , #{password}
+            , #{memberDetailId}
+          )
+    </insert>
+
+    <select id="selectMemberInfoByLoginId" resultType="MemberDTO">
+        select
+          a.id
+          , a.login_id as loginId
+          , b.name
+          , b.birthday
+          , b.mobile_no as mobileNo
+          , b.email
+          , b.zipcode
+          , b.address
+          , b.address_detail as addressDetail
+        from member a
+        inner join member_detail b on a.member_detail_id = b.id
+        where 1=1
+          and a.login_id=#{loginId}
+          and a.leaved=false
+    </select>
+
+    <update id="updateMemberInfoByLoginId">
+        update member_detail
+        set
+          name=#{name}
+          , birthday=#{birthday}
+          , mobile_no=#{mobileNo}
+          , email=#{email}
+          , zipcode=#{zipcode}
+          , address=#{address}
+          , address_detail=#{addressDetail}
+        where 1=1
+          and id=(select member_detail_id from member where login_id=#{loginId} and leaved=false)
+    </update>
+
+    <select id="selectLoginIdForFindId" resultType="String">
+        select
+          a.login_id
+        from member a
+        inner join member_detail b on a.member_detail_id = b.id
+        where 1=1
+          and b.name=#{name}
+          and b.mobile_no=#{mobileNo}
+          and b.email=#{email}
+          and a.leaved=false
+    </select>
+
+    <select id="selectLoginIdForFindPassword" resultType="String">
+        select
+          a.login_id
+        from member a
+        inner join member_detail b on a.member_detail_id = b.id
+        where 1=1
+          and b.name=#{name}
+          and b.mobile_no=#{mobileNo}
+          and b.email=#{email}
+          and a.login_id=#{loginId}
+          and a.leaved=false
+    </select>
+
+    <update id="updatePassword">
+        update member
+        set
+          password=#{password}
+        where 1=1
+          and login_id=#{loginId}
+    </update>
+
+    <update id="updateLeavedState">
+        update member
+        set
+          leaved=true
+        where 1=1
+          and login_id=#{loginId}
+    </update>
+</mapper>
+
+
+
+
+
+
+
+

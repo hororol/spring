@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+http://www.springframework.org/schema/security : 기본 namespace를 security로 설정
+-->
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                 http://www.springframework.org/schema/beans/spring-beans.xsd
+                                 http://www.springframework.org/schema/security
+                                 http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="www.kb"/>
+
+    <!--
+    resorces 폴더 안에 있는 파일들은 security 대상이 아니라는 것을 나타낸다. 즉 필터를 거치지 않게 된다.
+    이 설정을 넣지 않으면 로그인 화면의 CSS와 각종 리소스 파일들이 먹히지 않게된다.
+    -->
+    <http pattern="/resources/**" security="none"></http>
+    <http pattern="/rest/**" security="none"></http>
+
+    <!--
+    auto-config 속성 : 자동 설정
+    use-expressions 속성 : intercept-url에 SpEL문법의 사용유무 선택
+    -->
+    <http auto-config="true" use-expressions="true">
+        <!--
+        모든 URL을 접속(/**)하기 위해선 ROLE_USER 권한이 필요하다는 뜻이다.
+        index 페이지 및 모든 페이지에 들어갈 수 있는 사람은 로그인을 한, 즉 권한을 가진(ROLE_USER) 사람만 들어 올 수 있다는 뜻이다.
+        나중에 되면 이곳에서 페이지의 경로(/admin/**, /user/**, ...)에 원하는 대로 권한 설정을 할 수 있다.
+        -->
+
+        <!-- 관리자 페이지 권한 -->
+        <!--<intercept-url pattern="/item/order" access="hasRole('ROLE_MEMBER')"/>-->
+        <!--<intercept-url pattern="/item/orderProc" access="hasRole('ROLE_MEMBER')"/>-->
+        <!--<intercept-url pattern="/item/order/result" access="hasRole('ROLE_MEMBER')"/>-->
+        <!--<intercept-url pattern="/item/registerCart" access="hasRole('ROLE_MEMBER')"/>-->
+        <!--<intercept-url pattern="/item/registerQuestion" access="hasRole('ROLE_MEMBER')"/>-->
+        <!--<intercept-url pattern="/mymenu/**" access="hasRole('ROLE_ADMIN')"/>-->
+        <intercept-url pattern="/board/write" access="isAuthenticated()"/>
+        <intercept-url pattern="/board/reply/register" access="isAuthenticated()"/>
+        <intercept-url pattern="/member/leave" access="isAuthenticated()"/>
+        <intercept-url pattern="/member/password/update" access="isAnonymous()"/>
+        <intercept-url pattern="/member/info" access="isAuthenticated()"/>
+        <intercept-url pattern="/member/info/update" access="isAuthenticated()"/>
+        <intercept-url pattern="/member/find/**" access="isAnonymous()"/>
+        <intercept-url pattern="/member/join" access="isAnonymous()"/>
+        <intercept-url pattern="/member/join/result" access="isAnonymous()"/>
+        <intercept-url pattern="/member/login" access="isAnonymous()"/>
+        <intercept-url pattern="/**" access="permitAll()"/>
+
+        <!-- 권한 설정 -->
+        <!--
+        username-parameter : 아이디 입력 input 태그의 name 속성값을 변경했기 때문에 추가해주었다. 기본값은 username이다.
+        password-parameter : 비밀번호 입력 input 태그의 name 속성값을 변경했기 때문에 추가해주었다. 기본값은 password이다.
+        login-processing-url : form 태그의 action 속상값의 기본값이다. 기본값을 설정했을 때는 생략해도 된다.
+        login-page : 로그인 페이지의 url을 뜻한다.
+        default-target-url :` 로그인 성공시, 가게 될 페이지를 뜻한다.
+        -->
+        <form-login
+                username-parameter="loginId"
+                password-parameter="password"
+                login-page="/member/login"
+                login-processing-url="/member/login"
+                default-target-url="/"
+                authentication-failure-handler-ref="authenticationFailureHandler"
+                authentication-success-handler-ref="authenticationSuccessHandler"
+        />
+
+        <!-- 로그아웃 -->
+        <logout
+                logout-url="/member/logout"
+                logout-success-url="/"
+        />
+
+        <session-management invalid-session-url="/member/session/expire">
+            <concurrency-control max-sessions="1" expired-url="/member/login"/>
+        </session-management>
+
+        <!-- 접근 권한 없음 페이지 커스터마이징 -->
+        <access-denied-handler error-page="/access/deny"/>
+    </http>
+
+    <authentication-manager>
+        <authentication-provider ref="authenticationProvider"/>
+        <authentication-provider user-service-ref="userDetailsService">
+        </authentication-provider>
+    </authentication-manager>
+
+    <!-- 비밀번호 암호화 빈 등록 -->
+    <beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+    <!-- 로그인 관련 서비스 프로바이더 빈 등록 -->
+    <beans:bean id="userDetailsService" class="www.kb.security.service.UserDetailsServiceImpl"/>
+    <beans:bean id="authenticationProvider" class="www.kb.security.handler.AuthenticationProviderImpl"/>
+
+    <!-- 로그인 성공 시 빈 세팅 -->
+    <beans:bean id="authenticationSuccessHandler" class="www.kb.security.handler.AuthenticationSuccessHandlerImpl">
+        <beans:property name="idParam" value="loginId"/>
+        <beans:property name="defaultUrl" value="/"/>
+    </beans:bean>
+
+    <!--ROLE_ 접두사 제거-->
+    <beans:bean id="grantedAuthorityDefaults" class="org.springframework.security.config.core.GrantedAuthorityDefaults">
+        <beans:constructor-arg value=""/>
+    </beans:bean>
+
+    <!-- 로그인 실패 시 빈 세팅 -->
+    <beans:bean id="authenticationFailureHandler" class="www.kb.security.handler.AuthenticationFailureHandlerImpl">
+        <beans:property name="idParam" value="loginId"/>
+        <beans:property name="pwParam" value="loginPw"/>
+        <beans:property name="msg" value="errorMessage"/>
+        <beans:property name="url" value="/member/login?error"/>
+    </beans:bean>
+</beans:beans>
