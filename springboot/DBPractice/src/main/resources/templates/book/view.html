@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>책 상세보기</title>
+    <script>
+        function count(){
+        <!--수량 증가 감소 함수 만들기-->
+        }
+    </script>
+</head>
+<body>
+<div style="display:inline-block">
+    <img th:src="@{/img/} + ${bookDetail.getImg}" style="width: 50px; height: 70px;">
+</div>
+<div style="display:inline-block; margin-top:-0.2rem;">
+    <div>제목 : <span th:text="${bookDetail.getTitle}" ></span></div>
+    <div>카테고리 : <span th:text="${bookDetail.getCategory}"></span></div>
+    <div>가격 : <span th:text="${bookDetail.getPrice}"></span>원</div>
+<!--    <div>수량 : <button type="button" class="plus" onclick="count()">+</button><input type="text" value="1" id="book_count"><button type="button" class="minus" onclick="count()">-</button></div>-->
+</div>
+<div>후기</div>
+<button type="button" >장바구니 담기</button>
+</body>
+</html>

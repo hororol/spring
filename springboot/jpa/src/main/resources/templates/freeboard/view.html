@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default_layout}">
+<head>
+    <title>index</title>
+</head>
+<th:block layout:fragment="css">
+    <style>
+    </style>
+</th:block>
+<th:block layout:fragment="script">
+    <script>
+    function doDelete(){
+      const idx = [[${freeBoardDto.idx}]];
+      let result = confirm('삭제하시겠습니까?');
+      if(result){
+        $.ajax({
+          url:"http://localhost:8080/FreeBoard/Delete",
+          data: {idx},
+          type: "delete",
+          success:function(result){
+            alert('삭제됨'+result);
+            console.log(result);
+            if(result ==='success'){
+              location.href="/FreeBoard";
+            }
+          },
+          error:function(error){
+            alert('error'+error);
+          }
+        });
+      }
+    }
+  </script>
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="container">
+        <h1>FreeBoard > View</h1>
+        <!-- thymeleaf
+          $ <- model 에 있는거 가져옴..
+          @ <- 경로 지정할때..
+          * <- 객체 안에 있는 변수들 가져올때..
+          # <- 함수 사용시
+        -->
+        <label class="mb-3">제목</label>
+        <div class="border rounded p-3">
+            <span th:text="${freeBoardDto.title}"></span>
+        </div>
+        <label class="my-3">내용</label>
+        <div class="border rounded p-3">
+            <span th:text="${freeBoardDto.content}"></span>
+        </div>
+        <div class="my-3">
+            <a th:href="@{/FreeBoard/UpdateForm(idx=${freeBoardDto.idx})}"
+               class="btn btn-primary">글수정</a>
+<!--            <button type="button" onclick="doDelete();"-->
+<!--                    class="btn btn-primary">글삭제</button>-->
+            <a th:href="@{/FreeBoard/Delete(idx=${freeBoardDto.idx})}"
+               class="btn btn-primary">글삭제</a>
+        </div>
+    </div>
+</th:block>
+</html>

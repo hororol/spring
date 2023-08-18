@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+    <script>
+<!--        $(document).ready(function(){-->
+<!--            $('#title_btn').click(function(){-->
+<!--                $.ajax({-->
+<!--                    type: 'GET',-->
+<!--                    url: '/book/view',-->
+<!--                    data: {-->
+<!--                        title: $('#title').val()-->
+<!--                    },-->
+<!--                    async: true,-->
+<!--                    success: function(response){-->
+<!--                        alert('통신성공');-->
+<!--                    },-->
+<!--                    error: function(error){}-->
+<!--                })-->
+<!--            });-->
+<!--        });-->
+    </script>
+<!--  GET 방식 : url에 데이터를 담아서 보낸다  -->
+<!--  POST 방식 : body에 데이터를 담아서 보낸다 -->
+</head>
+<body>
+<h1 style="text-align: center;">🍤📙📘📗📕📚📖어서오세요 새우도서관입니다📖📚📕📗📘📙🍤</h1>
+<form method="post" action="/book/search" style="display:inline-block">
+    <input type="text" id="title" name="title"><button type="submit">책 검색</button>
+</form>
+<button type="button" onclick="location.href='/member/join'">회원가입</button>
+<button type="button" onclick="location.href='/login'">로그인</button>
+</body>
+</html>

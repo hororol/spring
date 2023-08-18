@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:fragment="headerFragment">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}">MYCAT</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" th:href="@{/FreeBoard}">FreeBoard</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()"><!--로그인이 안되어있을 경우만 SingUp버튼이 활성화 된다.-->
+                        <a class="nav-link" th:href="@{/Member/SignUp}">SignUp</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()"><!--로그인이 안되어있을 경우만 login버튼이 활성화 된다.-->
+                        <a class="nav-link" th:href="@{/account/login}">Login</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()"><!--로그인이 되었을 경우만 logout버튼이 활성화 된다.-->
+                        <a class="nav-link" th:href="@{/account/logout}">Logout</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled">Disabled</a>
+                    </li>
+                </ul>
+<!--                <form class="d-flex" role="search">-->
+<!--                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
+<!--                    <button class="btn btn-outline-success" type="submit">Search</button>-->
+<!--                </form>-->
+            </div>
+        </div>
+    </nav>
+</div>
+</html>
+
+<!-- thymeleaf template layout은 thymeleaf를 이용하여 공통 page를 fragment, layout형식으로 조립할 수 있는 template engine이다.-->

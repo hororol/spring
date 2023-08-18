@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/default_layout}">
+<head>
+    <title>index</title>
+</head>
+<th:block layout:fragment="css">
+<!--    <style>-->
+<!--        div{-->
+<!--            background-color: red;-->
+<!--            margin:2rem;-->
+<!--            height: 100px;-->
+<!--            transition: all ease 2s 0s;-->
+<!--        }-->
+<!--        h1{-->
+<!--            animation: myf infinite;-->
+<!--            animation-duration: 3s;-->
+<!--        }-->
+<!--        div:hover{-->
+<!--            transform: rotate(-45deg);-->
+<!--        }-->
+<!--        #mycheck{-->
+<!--            display: none;-->
+<!--        }-->
+<!--        #mycheck:checked + div{ /* ~ : 같은 계층에 있는 div를 다 변경, + : 가까운 div만 변경*/-->
+<!--            background-color: blue;-->
+<!--            height: 300px;-->
+<!--            animation: 2s;-->
+<!--        }-->
+<!--        .myDiv{-->
+<!--            background-color: blue;-->
+<!--            width: 100px;-->
+<!--            height: 100px;-->
+<!--            position: absolute;-->
+<!--            left: 0;-->
+<!--            animation: movemove infinite;-->
+<!--            animation-duration: 3s;-->
+<!--        }-->
+<!--        @keyframes myf {-->
+<!--            from {width: 50px}-->
+<!--            to{width:300px}-->
+<!--        }-->
+<!--        @keyframes movemove {-->
+<!--            from {left: 0px; transform:rotate(0deg);}-->
+<!--            to{left:300px; transform:rotate(360deg);}-->
+<!--        }-->
+<!--    </style>-->
+</th:block>
+<th:block layout:fragment="script">
+    <script>
+        console.log("test");
+    </script>
+</th:block>
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="row m-3">
+            <div class="col-2"></div>
+            <div class="col-8" style="overflow:hidden; height:400px;">
+                <div id="carouselExample" class="carousel slide">
+                    <div class="carousel-inner rounded">
+                        <div class="carousel-item active" style="height:400px;">
+                            <img th:src="@{images/1.jpg}" class="d-block w-100" alt="cat image">
+                        </div>
+                        <div class="carousel-item" style="height:400px;">
+                            <img th:src="@{images/6.jpg}" class="d-block w-100" alt="cat image">
+                        </div>
+                        <div class="carousel-item" style="height:400px;">
+                            <img th:src="@{images/7.jpg}" class="d-block w-100" alt="cat image">
+                        </div>
+                        <div class="carousel-item" style="height:400px;">
+                            <img th:src="@{images/8.jpg}" class="d-block w-100" alt="cat image">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-2"></div>
+        </div>
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10 d-flex">
+                <div class="card m-3" style="width: 18rem;">
+                    <img th:src="@{images/4.jpg}" class="card-img-top" alt="cat1">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+                <div class="card m-3" style="width: 18rem;">
+                    <img th:src="@{images/2.jpg}" class="card-img-top" alt="cat2">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+                <div class="card m-3" style="width: 18rem;">
+                    <img th:src="@{images/3.jpg}" class="card-img-top" alt="cat3">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+        </div>
+<!--    <label for="mycheck">이거누르면</label>-->
+<!--    <input type="checkbox" id="mycheck" />-->
+<!--    <div>-->
+<!--        <h1>div</h1>-->
+<!--        <p>testtesttesttesttesttest</p>-->
+<!--        <div class="myDiv">-->
+<!--            <h2>움직이는 공간</h2>-->
+<!--        </div>-->
+<!--    </div>-->
+</th:block>
+</html>
+
+<!--
+layout:decorate="layout path"속성을 입력해 layout을 사용할수 있다.
+layout:fragment="content" 속성을 통해 content fragment를 선언한다.
+-->

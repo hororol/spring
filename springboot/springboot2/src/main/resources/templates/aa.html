@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+    <h1 th:text="${data}">aa</h1> <!-- ${data}의 값을 aa에 넣어 출력-->
+    <form>
+        <input type="text" name="num1">
+        -
+        <input type="text" name="num2">
+        <input type="submit" value="전송">
+    </form>
+<h3 th:text="${result}"></h3>
+</body>
+</html>

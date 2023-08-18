@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="book">
+    <select id="doSelect" parameterType="com.example.DBPractice.dto.BookDTO" resultType="com.example.DBPractice.dto.BookDTO">
+        select * from book where title like concat('%', #{title}, '%')
+    </select>
+
+    <select id="doSelectOne" parameterType="com.example.DBPractice.dto.BookDTO" resultType="com.example.DBPractice.dto.BookDTO">
+        select * from book where idx=#{idx}
+    </select>
+</mapper>
+
+<!--
+parameterType은 DAO에서 DB로 전달되는 값의 데이터형
+resultType은 DB에서 DAO로 전달되는 값의 데이터형
+-->
+
+<!--
+# MySql
+SELECT * FROM TABLE_NAME
+WHERE COLUMN_NAME LIKE CONCAT(‘%’, #{searchKeyword}, ‘%’)
+
+# ORACLE
+SELECT * FROM TABLE_NAME
+WHERE COLUMN_NAME LIKE '%'||#searchKeyword#||'%'
+
+# Ms-Sql
+SELECT * FROM TABLE_NAME
+WHERE COLUMN_NAME LIKE '%' + #searchKeyword# + '%'
+-->

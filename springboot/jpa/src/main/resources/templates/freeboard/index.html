@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/default_layout}">
+<head>
+    <title>index</title>
+</head>
+<th:block layout:fragment="css">
+</th:block>
+<th:block layout:fragment="script">
+    <script>
+        console.log("test");
+    </script>
+</th:block>
+<th:block layout:fragment="content">
+    <h1 th:text="${totalPages}"></h1>
+    <h1 th:text="${totalElements}"></h1>
+    <div class="d-flex justify-content-end">
+        <form class="d-flex w-md-25" role="search"><!--form에 아무것도 안 적으면 현재페이지로 데이터를 전송한다.-->
+            <input class="form-control me-2" name="searchText" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
+    </div>
+    <div class="container">
+        <h1>FreeBoard</h1>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>순번</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일자</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="freeboarddto :${list}">
+                <td th:text="${freeboarddto.idx}"></td>
+                <td>
+                    <a th:href="@{/FreeBoard/View(idx=${freeboarddto.idx})}" th:text="${freeboarddto.title}"></a>
+                </td>
+                <td th:text="${freeboarddto.name}"></td>
+                <td th:text="${#temporals.format(freeboarddto.createdDate,'yyyy-MM-dd HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center">
+            <div th:if="${totalElemnets != 0}">
+                <nav aria-label="pagination">
+                    <ul class="pagination">
+                        <li class="page-item" th:classappend="${curPage == 1}? 'disabled'">
+                            <a class="page-link" th:href="@{/FreeBoard(page=${curPage-2})}">Previous</a>
+                        </li>
+                        <li class="page-item" th:each="i:${#numbers.sequence(1,totalPages)}">
+                            <a class="page-link" th:classappend="${i==curPage}? 'active'" th:href="@{/FreeBoard(page=${i-1})}" th:text="${i}">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${curPage == totalPages}? 'disabled'">
+                            <a class="page-link" th:href="@{/FreeBoard(page=${curPage})}">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div th:if="${totalElements == 0}">
+                <h2>검색되는 내용이 없습니다.</h2>
+            </div>
+        </div>
+        <a th:href="@{/FreeBoard/WriteForm}" class="btn btn-primary">글쓰기</a>
+    </div>
+
+</th:block>
+</html>
+
+<!--
+layout:decorate="layout path"속성을 입력해 layout을 사용할수 있다.
+layout:fragment="content" 속성을 통해 content fragment를 선언한다.
+-->

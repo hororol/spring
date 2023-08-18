@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/default_layout}">
+<head>
+    <title>index</title>
+</head>
+<th:block layout:fragment="css">
+</th:block>
+<th:block layout:fragment="script">
+    <script>
+        console.log("test");
+    </script>
+</th:block>
+<th:block layout:fragment="content">
+    <div class="container">
+        <h1>FreeBoard > WriteForm</h1>
+<!-- tymeleaf
+    $ <- model에 있는거 가져옴
+    @ <- 경로 지정할때 사용함
+    * <- 객체 안에 있는 변수들 가져올때 사용함
+-->
+        <form method="post" th:action="@{/FreeBoard/WriteForm}" th:object="${freeBoardDto}">
+            <label>제목</label>
+            <input type="text" name="title"
+                   class="form-control mb-3"
+                   th:field="*{title}"
+                   th:classappend="${#fields.hasErrors('title')}? 'is-invalid' "
+            />
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+            <label>내용</label>
+            <textarea name="content" class="form-control mb-3" th:field="*{content}"
+                      th:classappend="${#fields.hasErrors('content')}? 'is-invalid' "></textarea>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+            <input type="submit" class="btn btn-primary" value="저장"/>
+        </form>
+    </div>
+</th:block>
+</html>
+
+<!--
+layout:decorate="layout path"속성을 입력해 layout을 사용할수 있다.
+layout:fragment="content" 속성을 통해 content fragment를 선언한다.
+-->

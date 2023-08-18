@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="product_reply">
+    <select id="select" resultType="com.example.springboot230703.dto.Product_reply" parameterType="com.example.springboot230703.dto.Product_reply">
+        WITH RECURSIVE CTE AS(
+            SELECT idx_reply, idx_products, ref_idx_reply, ref_level, content, CONVERT(idx_reply, CHAR(255)) AS PATH
+            FROM products_reply
+            WHERE idx_products =#{idx_products}
+            AND ref_idx_reply = 0
+        UNION
+            SELECT uc.idx_reply, uc.idx_products, uc.ref_idx_reply, uc.ref_level, uc.content, CONVERT(CONCAT(CTE.path, '-', uc.idx_reply), CHAR(255)) AS PATH
+            FROM products_reply uc
+            INNER JOIN CTE ON uc.ref_idx_reply = CTE.idx_reply
+            WHERE uc.idx_products = #{idx_products}
+        )
+        SELECT * FROM CTE
+        ORDER BY CONVERT(SUBSTRING_INDEX(PATH,'-',1), UNSIGNED) ASC, idx_reply ASC,
+        CONVERT(SUBSTRING_INDEX(PATH,'-',2),UNSIGNED) ASC, idx_reply ASC;
+    </select>
+
+    <insert id="insert" parameterType="com.example.springboot230703.dto.Product_reply">
+        INSERT INTO products_reply
+        (idx_products, ref_idx_reply, ref_level, content)
+        VALUES
+        (#{idx_products}, #{ref_idx_reply}, #{ref_level}, #{content});
+    </insert>
+
+    <select id="selectrow" parameterType="com.example.springboot230703.dto.Product_reply" resultType="com.example.springboot230703.dto.Product_reply">
+        select * from products_reply
+        where idx=#{idx}
+    </select>
+<!-- 숫자하나 보낼려면 parameterType="java.lang.Integer"-->
+    <delete id="delete" parameterType="com.example.springboot230703.dto.Product_reply">
+        delete from products_reply
+        where idx_reply = #{idx_reply}
+    </delete>
+</mapper>

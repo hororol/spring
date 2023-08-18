@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.9 user-scalable=no">
+    <title>메인화면</title>
+    <style>
+      *{
+        user-select: none;
+        outline: none;
+      }
+      body{
+        background: #000000;
+      }
+      .login_box{
+        width: 80%;
+        background: #F8F8F8;
+        padding-bottom: 20px;
+        margin: 0 auto;
+      }
+      .login_title{
+        padding: 15px 0px 15px 0px;
+        font-size: 25px;
+        font-weight: bold;
+        color: #444444;
+        text-align: center;
+        margin-bottom: 1em;
+      }
+      .login_id, .login_pwd{
+        width: 100%;
+        text-align: center;
+      }
+      .inp{
+        width: 80%;
+        font-size: 17px;
+        background: none;
+        border: 0px;
+        border-bottom: 1px solid #777;
+        outline: none;
+        margin-top: 1em;
+        margin: 10px 0px 10px 0px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+      .inp:focus{
+        border-bottom: 1px solid #4a4a4a;
+      }
+      .inp::placeholder{
+        color:#3F3F3F;
+      }
+      .login_input{
+        margin-bottom: 3em;
+      }
+      .btn_login{
+        text-align: center;
+      }
+      .btn_login > button{
+        width: 80%;
+        padding: 10px 0px 10px 0px;
+        border: 0px;
+        background: #343434;
+        font-size: 17px;
+        color: #F8F8F8;
+        font-weight: bold;
+      }
+
+      .others{
+        text-align: center;
+      }
+      .others ul{
+        padding-left: 0px;
+      }
+      .others ul > span{
+        color: #DEDEDE;
+      }
+      .others ul > li{
+        display: inline-block;
+      }
+      .others ul > li a{
+        color: #4A4A4A;
+        text-decoration: none;
+        font-size: 15px;
+      }
+    </style>
+</head>
+<body>
+<form th:action="@{/account/login}" method="post">
+<div class="login_box">
+    <div class="login_title">
+        로그인 하세요
+    </div>
+    <div class="login_input">
+        <div class="login_id">
+            <input class="inp" type="text" name="username" placeholder="아이디">
+        </div>
+        <div class="login_pwd">
+            <input class="inp" type="password" name="password" placeholder="비밀번호">
+        </div>
+    </div>
+    <div class="btn_box">
+        <div class="btn_login">
+            <button>로그인</button>
+        </div>
+        <div class="others">
+            <ul>
+                <li>
+                    <a>회원가입</a>
+                </li><span>&nbsp;|</span>
+                <li>
+                    <a>아이디 찾기</a>
+                </li>
+                <span>|</span>
+                <li>
+                    <a>비밀번호 재설정</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</form>
+</body>
+</html>
